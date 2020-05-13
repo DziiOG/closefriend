@@ -1,0 +1,17 @@
+{
+  "name": "closefriend",
+  "displayName": "closefriend",
+  "expo": {
+    "name": "closefriend",
+    "slug": "closefriend",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
