@@ -22,6 +22,13 @@ import {
 
 import { NavigationContainer } from '@react-navigation/native';
 
+import HomeContainer from '../routes/Home/containers/HomeContainer'
+import ComposeContainer from '../routes/Compose/containers/ComposeContainer'
+import AlarmContainer from '../routes/Alarm/containers/AlarmContainer'
+import SettingsContainer from '../routes/Settings/containers/SettingsContainer'
+import ProfileContainer from '../routes/Profile/containers/ProfileContainer'
+import ChatsContainer from '../routes/Chats/containers/ChatsContainer'
+
 
 
 
@@ -49,8 +56,13 @@ const Drawers = createDrawerNavigator();
 export default function MyDrawer() {
   return (
     <NavigationContainer >
-      <Drawers.Navigator  initialRouteName="Home2" drawerContent={(props)=> <CustomDrawerContent {...props}></CustomDrawerContent>}>
-        <Drawers.Screen name="Home2" component={MainTabScreen} />
+      <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props}></CustomDrawerContent>}>
+        <Drawers.Screen name="Home"  component={HomeContainer} />
+        <Drawers.Screen name="Home" component={AlarmContainer} />
+        <Drawers.Screen name="Home" component={ProfileContainer} />
+        <Drawers.Screen name="Home" component={ComposeContainer} />
+        <Drawers.Screen name="Home" component={ChatsContainer} />
+        <Drawers.Screen name="Home" component={SettingsContainer} />
        
       </Drawers.Navigator>
     </NavigationContainer>
