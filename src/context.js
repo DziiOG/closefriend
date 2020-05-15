@@ -5,8 +5,24 @@ const ProductContext = React.createContext();
 
  class ProductProvider extends Component {
 
-    state={
-       
+    state = {
+        autoFocus: false
+    }
+
+
+    changeFocus= () => {
+        //console.log(this.state.autoFocus)
+        if(this.state.autoFocus == false) {
+            this.setState({
+                autoFocus: true
+            })
+            console.log(this.state.autoFocus)
+        }else {
+            this.setState({
+                autoFocus: false
+            })
+            console.log(this.state.autoFocus)
+        }
     }
 
 
@@ -14,7 +30,7 @@ const ProductContext = React.createContext();
         return (
            <ProductContext.Provider
            value={{...this.state,
-          
+            changeFocus: this.changeFocus
            
            }}
            >

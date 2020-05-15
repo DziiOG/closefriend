@@ -14,11 +14,12 @@ import {
     Caption,
     Paragraph,
     Drawer,
-    Text,
+    
     TouchableRipple,
     Switch
 } from 'react-native-paper';
 
+import {Text} from 'native-base'
 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -58,11 +59,11 @@ export default function MyDrawer() {
     <NavigationContainer >
       <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props}></CustomDrawerContent>}>
         <Drawers.Screen name="Home"  component={HomeContainer} />
-        <Drawers.Screen name="Home" component={AlarmContainer} />
-        <Drawers.Screen name="Home" component={ProfileContainer} />
-        <Drawers.Screen name="Home" component={ComposeContainer} />
-        <Drawers.Screen name="Home" component={ChatsContainer} />
-        <Drawers.Screen name="Home" component={SettingsContainer} />
+        <Drawers.Screen name="Alarm" component={AlarmContainer} />
+        <Drawers.Screen name="Profile" component={ProfileContainer} />
+        <Drawers.Screen name="Compose" component={ComposeContainer} />
+        <Drawers.Screen name="Chats" component={ChatsContainer} />
+        <Drawers.Screen name="Settings" component={SettingsContainer} />
        
       </Drawers.Navigator>
     </NavigationContainer>
@@ -93,26 +94,17 @@ function CustomDrawerContent(props) {
                             </Avatar.Image>
                             <View style={{marginLeft: 15, flexDirection: 'column'}}>
                                 <Title style ={styles.title}>Full Name</Title>
-                                <Caption>@Username </Caption>
+                                <Text note>email@email.com</Text>
                             </View>
                         </View>
 
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={styles.paragraph, styles.caption}>0</Paragraph>
-                                <Caption>  Following</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Paragraph style={styles.paragraph, styles.caption}>0</Paragraph>
-                                <Caption>  Followers</Caption>
-                            </View>  
-                        </View>
+                        
                     </View> 
                     <Drawer.Section style={styles.drawerContent}>
                         <DrawerItem icon={({size}) => (
                                 <Icon
                                     name="home-outline"
-                                    color="#DDA0DD"
+                                    color="#d2d2d2"
                                     size={size}
                                     >
 
@@ -121,59 +113,72 @@ function CustomDrawerContent(props) {
                                 )} 
                                 label="Home"
                                 
-                                onPress={()=> {}}
+                                onPress={()=> {props.navigation.navigate('Home')}}
                                 >
                         </DrawerItem>
                         <DrawerItem icon={({color, size}) => (
                                 <Icon
-                                    name="account-outline"
-                                    color="#DDA0DD"
+                                    name="clock-outline"
+                                    color="#d2d2d2"
                                     size={size}
                                     >
 
                                 </Icon>
                                 )} 
-                                label="Measurements"
-                                onPress={()=> {}}
+                                label="Alarm"
+                                onPress={()=> {props.navigation.navigate('Alarm')}}
                                 >
                         </DrawerItem>
                         <DrawerItem icon={({color, size}) => (
                                 <Icon
                                     name="bookmark-outline"
-                                    color="#DDA0DD"
+                                    color="#d2d2d2"
                                     size={size}
                                     >
 
                                 </Icon>
                                 )} 
-                                label="Orders"
-                                onPress={()=> {}}
+                                label="Compose"
+                                onPress={()=> {props.navigation.navigate('Compose')}}
                                 >
                         </DrawerItem>
                         <DrawerItem icon={({color, size}) => (
                                 <Icon
-                                    name="settings-outline"
-                                    color="#DDA0DD"
+                                    name="wechat"
+                                    color="#d2d2d2"
                                     size={size}
                                     >
 
                                 </Icon>
                                 )} 
-                                label="Designs"
-                                onPress={()=> {}}
+                                label="Chats"
+                                onPress={()=> {props.navigation.navigate('Chats')}}
+                                >
+                        </DrawerItem>
+                        <DrawerItem icon={({color, size}) => (
+                                <Icon
+                                    name="face-profile"
+                                    color="#d2d2d2"
+                                    size={size}
+                                    >
+
+                                </Icon>
+                                )} 
+                                label="Profile"
+                                onPress={()=> {props.navigation.navigate('Profile')}}
                                 >
                         </DrawerItem>
                         <DrawerItem icon={({color, size}) => (
                                 <Icon
                                     name="settings-outline"
-                                    color="#DDA0DD"
+                                    color="#d2d2d2"
                                     size={size}
                                     >
 
                                 </Icon>
                                 )} 
                                 label="Settings"
-                                onPress={()=> {}}
+                                onPress={()=> {props.navigation.navigate('Settings')}}
                                 >
                         </DrawerItem>
                     </Drawer.Section>
@@ -194,7 +199,7 @@ function CustomDrawerContent(props) {
                 <DrawerItem icon={({color, size}) => (
                     <Icon
                     name="exit-to-app"
-                    color="#DDA0DD"
+                    color="#d2d2d2"
                     size={size}
                     >
 
