@@ -1,3 +1,3 @@
 export default {
-    
+    GET_USER_COMPOSED_DATA: "GET_USER_COMPOSED_DATA"
 }

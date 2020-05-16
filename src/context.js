@@ -6,7 +6,12 @@ const ProductContext = React.createContext();
  class ProductProvider extends Component {
 
     state = {
-        autoFocus: false
+        autoFocus: false,
+        active: false,
+        time: "",
+        dateM: "",
+        titleCompose: "",
+        taskCompose: ""
     }
 
 
@@ -16,21 +21,56 @@ const ProductContext = React.createContext();
             this.setState({
                 autoFocus: true
             })
-            console.log(this.state.autoFocus)
-        }else {
+            //console.log(this.state.autoFocus)
+        }else if(this.state.autoFocus == true){
             this.setState({
                 autoFocus: false
             })
-            console.log(this.state.autoFocus)
+            //console.log(this.state.autoFocus)
         }
     }
+
+    fabToggle = () => {
+        this.setState({ active: !this.state.active })
+    }
+
+   textHandler = (text, type) => {
+       if(type == "title"){
+           this.setState({
+               titleCompose: text
+           })
+
+           //console.log(this.state.titleCompose)
+       } else if(type == "task"){
+           this.setState({
+               taskCompose: text
+           })
+           //console.log(this.state.taskCompose)
+       }
+   }
+
+
+   returnToDefault = () => {
+       this.setState({
+        time: "",
+        dateM: "",
+        titleCompose: "",
+        taskCompose: ""
+       })
+   }
+
+    
 
 
     render() {
         return (
            <ProductContext.Provider
            value={{...this.state,
-            changeFocus: this.changeFocus
+            changeFocus: this.changeFocus,
+            fabToggle: this.fabToggle,
+            textHandler: this.textHandler,
+            returnToDefault: this.returnToDefault
+         
            
            }}
            >

@@ -1,112 +1,96 @@
-import React, { Component } from 'react'
-import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Footer, Fab  } from 'native-base'
+import React, { Component, Fragment } from 'react'
+import { Text, View, Button, Content, Left, Right, InputGroup, Input, Icon, Card, CardItem,  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import { ImageBackground, Dimensions, StyleSheet, Keyboard } from 'react-native'
-//import HeaderComponent from '../../../Components/Header'
-import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+
 import { TouchableOpacity } from 'react-native';
 import { ProductConsumer } from '../../../context';
-import HeaderComponentforAll from '../../../Components/Header';
+
+import Background from '../../../Components/Background';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const url = `https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
+exclude=hourly,daily&appid={ce8887d668b25e586fbcb948918be08b}`;
 
 export default class Alarm extends Component {
-    state = {
-        autoFocus: false,
-        searchBarFocused: true,
-        active: false
-    }
+
 
     componentDidMount(){
-        this.keyboardDidShow = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-        this.keyboardWillHide = Keyboard.addListener('keyboardDidHide', this.keyboardWillHide);
-        this.keyboardWillShow = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
-    }
 
-    changeFocus= () => {
-        //console.log(this.state.autoFocus)
-        if(this.state.autoFocus == false) {
-            this.setState({
-                autoFocus: true
-            })
-            //console.log(this.state.autoFocus)
-        }else if (this.state.autoFocus == true) {
-            this.setState({
-                autoFocus: false
-            })
-            //console.log(this.state.autoFocus)
-        }
     }
-  
-      keyboardDidShow = () => {
+    
+    
+    
+    
+    
+    
+    
+    dateTime = () => {
+        var e = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"),
+                            t = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"),
+                            a = new Date,
+                            i = a.getYear();
+                    1e3 > i && (i += 1900);
+                    var s = a.getDay(),
+                            n = a.getMonth(),
+                            r = a.getDate();
+                    10 > r && (r = "0" + r);
+                    var l = a.getHours(),
+                            c = a.getMinutes(),
+                            h = a.getSeconds(),
+                            o = "AM";
+     return l >= 12 && (o = "PM"), l > 12 && (l -= 12), 0 == l && (l = 12), 9 >= c && (c = "0" + c), 9 >= h && (h = "0" + h),  <Fragment>
+     <View style={{flexDirection: 'column',}}>
+         <Text  style={{color: '#fff', paddingLeft: 15, fontSize: 28, marginBottom: 15}}>
+            {e[s]} 
+         </Text>
+         <Text style={{color: '#fff', paddingLeft: 15, fontSize: 16, lineHeight: 18}} note>
+            {t[n] + " " + r + ", " + i}
+         </Text>
+     </View>
+     </Fragment> 
 
-        this.setState({searchBarFocused: false})
     }
-
-    keyboardWillHide = () => {
-        this.setState({searchBarFocused: true})
-        this.changeFocus()
-    }
-
-   
-  
-      
+       
     render() {
         return (
-            <Container style={{backgroundColor: 'transparent'}}>
-            <ImageBackground style={{
-                width: width, 
-                height:height, 
-                margin: 'auto',
-                overflow: 'hidden',
-                position: 'relative',
-                }} source={require('../../../assets/background.png')}>
-          <LinearGradient colors={["rgba(90, 93, 165, 1)","rgba(0, 0, 0, .7)", ]} style={styles.linearGradient}>
-                <Content>
-                   
+          <Background {...this.props} title="Alarm" searchBar={true} contentRender={(props)=> (
+          <View>
+             <Card style={{backgroundColor: 'transparent', borderColor: 'transparent'}}>
+                 <CardItem style={{backgroundColor: 'transparent', flex: 1, borderColor: 'transparent'}}>
+                     <Left style={{flexDirection:'column'}}>
+                            <View style={{paddingRight: 50}}>
+                                
+                                   {
+                                     this.dateTime()  
+                                   }
+                               
+                            </View>
+                            <View>
+                                <Text note>
 
-                    <HeaderComponentforAll></HeaderComponentforAll>
-                    
-                </Content>
-                <View style={{ flex: 1, marginBottom: 15 }}>
-                                    <Fab
-                                        active={this.state.active}
-                                        direction="up"
-                                        containerStyle={{ 
-                                          
-                                        }}
-                                        style={{ backgroundColor: '#5067FF' }}
-                                        position="bottomRight"
-                                        onPress={() => this.setState({ active: !this.state.active })}>
-                                        <Icon1 name="home-outline" />
-                                        <TouchableOpacity style={{ backgroundColor: '#34A34F' }}  onPress={() =>this.props.navigation.navigate('Chats')}>
-                                        <Icon1  size={25} color="#fff" name="wechat" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ backgroundColor: '#3B5998' }} onPress={() =>this.props.navigation.navigate('Profile')}>
-                                        <Icon1  size={25} color="#fff" name="face-profile" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity  style={{ backgroundColor: '#DD5144' }} onPress={() =>this.props.navigation.navigate('Compose')}>
-                                        <Icon1 size={25} color="#fff" name="bookmark-outline" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity  style={{ backgroundColor: '#DD5144' }} onPress={() =>{this.props.navigation.navigate('Alarm')}}>
-                                        <Icon1  size={25} color="#fff" name="clock-outline"  onPress={() =>{this.props.navigation.navigate('Alarm')}} />
-                                        </TouchableOpacity>
-                                    </Fab>
-                                </View>
-          </LinearGradient>
-            </ImageBackground>
-          </Container>
+                                </Text>
+                            </View>
+                     </Left>
+                     <Right style={{flexDirection:'column'}}>
+                     <View>
+                              {
+                                  this.dateTime()
+                              }
+                    </View>
+                            <View>
+                                <Text>
+                                    
+                                </Text>
+                            </View>
+
+                     </Right>
+                 </CardItem>
+             </Card>
+          </View>)}>
+        
+          </Background>
         )
     }
 }
-
-
-var styles = StyleSheet.create({
-    linearGradient: {
-      flex: 1,
-      
-     
-
-    },
-  
-  });

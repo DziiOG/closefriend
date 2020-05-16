@@ -8,7 +8,7 @@ import {
 import Alarm from '../components/Alarm';
 
 const mapStateToProps = state => ({
- 
+ userCreatedTasks: state.compose.composedData || []
 });
 
 const mapActionsCreators = {

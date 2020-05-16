@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import {Header, View, Text, Left, Icon, Right } from 'native-base'
-import {TouchableOpacity, Dimensions} from 'react-native'
+import React, { Component, Fragment } from 'react'
+import {Header, View, Text, Left, Icon, Right, Input, InputGroup } from 'native-base'
+import {TouchableOpacity, Dimensions, Keyboard} from 'react-native'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import { ProductConsumer } from '../context';
 
@@ -11,6 +11,10 @@ const height = Dimensions.get('window').height;
 
 
 export default class HeaderComponentforAll extends Component {
+
+
+
+
     render() {
         return (
             <Header style={{backgroundColor: 'transparent',}}>
@@ -21,16 +25,21 @@ export default class HeaderComponentforAll extends Component {
                 </TouchableOpacity>
             <View >
                 <Text style={{color: '#fff', paddingLeft: 15}}>
-                    Alarm
+                    {this.props.title}
                 </Text>
             </View>
             </Left>
 
             <Right>
+            {
+
+            (this.props.searchBar == true) &&
+            <Fragment>
+
             <ProductConsumer>
                 {
                     (value) => (
-                        (this.state.autoFocus) &&
+                        (value.autoFocus) &&
                         <InputGroup style={{width: width * 0.5}}>
                             <Input  placeholder="Search Here"  autoFocus={true} placeholderTextColor="#d2d2d2" underlineColorAndroid="#fff"  style={{ fontSize: 15, width: 10}}>
                             </Input>                                       
@@ -38,12 +47,20 @@ export default class HeaderComponentforAll extends Component {
                     )
                 }
             </ProductConsumer>
-                {
+                
+                    <ProductConsumer>
+                        {
+                            (value)=> (
+                                <TouchableOpacity onPress={()=>{ value.changeFocus()} } style={{right: 0}}>
+                                    <Icon name="search" size={10} style={{color: '#fff'}} ></Icon>
+                                </TouchableOpacity>
+                            )
+                        }
+                    </ProductConsumer>
+            </Fragment>
                     
-                            <TouchableOpacity onPress={()=>{ this.changeFocus()} } style={{right: 0}}>
-                                <Icon name="search" size={10} style={{color: '#fff'}} ></Icon>
-                            </TouchableOpacity>
-                }
+                
+            }
             
             </Right>
         </Header>
