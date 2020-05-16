@@ -100,18 +100,7 @@ const DateFromTime = ({getUserComposedData, composedData, navigation}) => {
                                   justifyContent: 'center', 
                                   alignItems: 'center',
                                   borderRadius: 15
-                      }} onPress={()=>{
-                        getUserComposedData({
-                                  title: value.titleCompose,
-                                  task: value.taskCompose,
-                                  time: date,
-                                  dateM: date
-                      });   
-                      
-                      console.log(composedData)
-                      //value.returnToDefault(); 
-                      
-                      }}
+                      }} 
                       keyboardShouldPersistTaps="always"
                       onPressIn={()=>{
 

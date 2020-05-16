@@ -1,13 +1,19 @@
 import React, { Component, Fragment } from 'react'
 import { Text, View, Button, Content, Left, Right, InputGroup, Input, Icon, Card, CardItem,  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
-import { ImageBackground, Dimensions, StyleSheet, Keyboard } from 'react-native'
+import { ImageBackground, Dimensions, StyleSheet, Keyboard, ActivityIndicator } from 'react-native'
 import axios from 'axios';
+import Geolocation from '@react-native-community/geolocation';
 
 import { TouchableOpacity } from 'react-native';
 import { ProductConsumer } from '../../../context';
 
 import Background from '../../../Components/Background';
+import Geocoder from 'react-native-geocoding';
+
+
+Geocoder.init("AIzaSyAjL_doMA-BBX1S-Lx_BJXrPAjQCFh3UrM");
+
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 const url = `https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&
@@ -16,10 +22,66 @@ exclude=hourly,daily&appid={ce8887d668b25e586fbcb948918be08b}`;
 export default class Alarm extends Component {
 
 
+
+    state={
+        latitude: 0,
+        longitude: 0,
+        address: "",
+        
+    }
+
+
+
+    getLocation(){
+        Geolocation.getCurrentPosition((position) => {
+      
+           this.setState({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+            }, () => {
+                //console.log(this.state)
+                
+                axios.post(url).then((response)=>{
+                    console.log(response.data)
+             
+                })
+
+
+
+                Geocoder.from(this.state.latitude, this.state.longitude)
+                .then(json => {
+                        var addressComponent = json.results[0].address_components[0];
+                        this.setState({
+                            address: addressComponent
+                        })
+
+                })
+                .catch(error => console.warn(error));
+
+               
+                
+                
+            });
+        }, (error) => {
+            //Handling Error
+            console.log(error);
+        }, 
+        { enableHighAccuracy: false, timeout: 200000, maximumAge: 100},
+        );
+      }
+
+
     componentDidMount(){
+        
+        this.getLocation();
+        
+
+
 
     }
     
+
+   
     
     
     
@@ -42,10 +104,10 @@ export default class Alarm extends Component {
                             o = "AM";
      return l >= 12 && (o = "PM"), l > 12 && (l -= 12), 0 == l && (l = 12), 9 >= c && (c = "0" + c), 9 >= h && (h = "0" + h),  <Fragment>
      <View style={{flexDirection: 'column',}}>
-         <Text  style={{color: '#fff', paddingLeft: 15, fontSize: 28, marginBottom: 15}}>
+         <Text  style={{color: '#fff', paddingLeft: 15, fontSize: 22, marginBottom: 15}}>
             {e[s]} 
          </Text>
-         <Text style={{color: '#fff', paddingLeft: 15, fontSize: 16, lineHeight: 18}} note>
+         <Text style={{color: '#ccc', paddingLeft: 15, fontSize: 13, lineHeight: 18}} note>
             {t[n] + " " + r + ", " + i}
          </Text>
      </View>
@@ -56,7 +118,7 @@ export default class Alarm extends Component {
     render() {
         return (
           <Background {...this.props} title="Alarm" searchBar={true} contentRender={(props)=> (
-          <View>
+          <View style={{padding: 15, position: 'relative'}}>
              <Card style={{backgroundColor: 'transparent', borderColor: 'transparent'}}>
                  <CardItem style={{backgroundColor: 'transparent', flex: 1, borderColor: 'transparent'}}>
                      <Left style={{flexDirection:'column'}}>
@@ -75,9 +137,15 @@ export default class Alarm extends Component {
                      </Left>
                      <Right style={{flexDirection:'column'}}>
                      <View>
-                              {
-                                  this.dateTime()
-                              }
+                                    <View style={{flexDirection: 'column',}}>
+                                    <Icon1 name="sun"></Icon1>
+                                        <Text  style={{color: '#fff', paddingLeft: 15, fontSize: 28, marginBottom: 15}}>
+                                            {} 
+                                        </Text>
+                                        <Text style={{color: '#ccc', paddingLeft: 15, fontSize: 16, lineHeight: 18}} note>
+                                            {this.state.address}
+                                        </Text>
+                                    </View>        
                     </View>
                             <View>
                                 <Text>
@@ -88,6 +156,47 @@ export default class Alarm extends Component {
                      </Right>
                  </CardItem>
              </Card>
+
+
+            <Card  style={{backgroundColor: 'transparent', borderColor: 'transparent', height: height * 0.5}}>
+            <Content>
+
+                <CardItem style={{backgroundColor: 'transparent', flex: 1, borderColor: 'transparent'}}>
+                    <Content style={{ flexDirection: 'row'}}>
+
+                    {
+                        (this.props.userCreatedTasks.length == 0) ? (
+                        <View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
+                            <ActivityIndicator size='large'></ActivityIndicator>
+                        </View>) :
+                            (
+                                this.props.userCreatedTasks.map((element, index)=> (
+
+                                <TouchableOpacity key={index} style={{flexDirection: 'row', marginTop: (index > 0)? 15 : 0}}>
+                                            
+                                        <View style={{flexDirection: 'column', }}>
+                                            <Text style={{color: '#fff', fontSize: 14}}>9</Text>
+                                            <Text style={{color: '#ccc', fontSize: 11}} note>AM</Text>
+                                        </View>
+                                        <View style={{paddingLeft: 60, flexDirection: 'column', borderBottomColor: '#fff', }}>
+                                            <Text style={{color: '#fff', fontSize: 14}}>{element.title}</Text>
+                                            <Text style={{color: '#ccc', fontSize: 11 }} note>{element.task}</Text>
+                                        </View>
+                                </TouchableOpacity>
+
+                                ))
+                            )
+                    }
+                     
+                    
+
+
+                    </Content>
+                </CardItem>
+            </Content>
+            </Card>
+
+
           </View>)}>
         
           </Background>
