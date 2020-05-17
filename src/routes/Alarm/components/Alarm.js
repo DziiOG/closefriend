@@ -41,7 +41,8 @@ export default class Alarm extends Component {
             }, () => {
                 //console.log(this.state)
                 
-                axios.post(url).then((response)=>{
+                axios.post( `https://api.openweathermap.org/data/2.5/onecall?lat=${this.state.latitude}&lon=${this.state.longitude}&
+                exclude=hourly,daily&appid={ce8887d668b25e586fbcb948918be08b}`).then((response)=>{
                     console.log(response.data)
              
                 })
@@ -75,8 +76,6 @@ export default class Alarm extends Component {
         
         this.getLocation();
         
-
-
 
     }
     
