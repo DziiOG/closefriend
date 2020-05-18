@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Fab, Card, CardItem  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Dimensions, TouchableOpacity } from 'react-native'
+import { Dimensions, TouchableOpacity, Modal } from 'react-native'
+import { GiftedChat } from 'react-native-gifted-chat'
 import {
     Avatar,
     
 } from 'react-native-paper';
+import axios from 'axios'
 
 import Background from '../../../Components/Background';
 const width = Dimensions.get('window').width;
@@ -15,8 +17,52 @@ export default class Chats extends Component {
    
 
     state={
-        activeIndex: 0
+        activeIndex: 0,
+        messages: []
     }
+
+    
+      
+         componentDidMount() {
+             this.setState({
+               messages: [
+                 {
+                   _id: 1,
+                   text: 'Hello developer',
+                   createdAt: new Date(),
+                   user: {
+                     _id: 2,
+                     name: 'React Native',
+                     avatar: 'https://placeimg.com/140/140/any',
+                   },
+                 },
+               ],
+             })
+           }
+
+           getFromFire = () => {
+               axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages",{
+                   
+               })
+           }
+         
+           onSend(messages = []) {
+             this.setState(previousState => ({
+               messages: GiftedChat.append(previousState.messages, messages),
+             }))
+           }
+         
+           sendToFire = (messages) =>{
+                axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages", {
+                    messages: messages,
+                    fullName: "Whitson"
+                }).then(response=> {
+                    console.log(response.data)
+                    this.onSend(messages)
+                }).catch(error=> console.log(error))
+           }
+    
+    
    
     renderSection = () => {
         if(this.state.activeIndex == 0){
@@ -55,7 +101,20 @@ export default class Chats extends Component {
         }else if( this.state.activeIndex == 1){
 
             return(
-                this.renderSectionTwo()
+                <Modal style={{backgroundColor: '#d2d2d2'}}>
+
+                   
+                    
+                    <GiftedChat
+                    messages={this.state.messages}
+                    onSend={messages => this.sendToFire(messages)}
+                    user={{
+                      _id: 1,
+                        }}
+                  />
+                   
+                </Modal>
+                
             )
         }else if(this.state.activeIndex == 3){
             

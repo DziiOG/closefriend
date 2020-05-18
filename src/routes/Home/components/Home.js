@@ -17,12 +17,22 @@ export default class Home extends Component {
         date: new Date(),
     }
 
-   
+    componentDidMount(){
+        this.myInterval = setInterval(()=>{
+            this.setState({
+                date: new Date()
+            })
+        }, 1000)
+    }
+
+    componentWillUnmount(){
+        clearInterval(this.myInterval)
+    }
    
 
-    
+
+
   
-     
 
     dateTime = () => {
         var e = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"),
@@ -52,11 +62,10 @@ export default class Home extends Component {
      </View>
      </Fragment> 
 
-
-                                    
-
-
     }
+
+
+   
 
     
    
