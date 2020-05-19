@@ -11,7 +11,9 @@ const ProductContext = React.createContext();
         time: "",
         dateM: "",
         titleCompose: "",
-        taskCompose: ""
+        taskCompose: "",
+        loading:false,
+        chatDetails: {}
     }
 
 
@@ -59,8 +61,23 @@ const ProductContext = React.createContext();
        })
    }
 
+   loading = () => {
+       if(this.state.loading == false){
+           this.setState({
+               loading: true
+           })
+       }else {
+           this.setState({
+               loading: false
+           })
+       }
+   }
     
-
+   getDetail = (item) => {
+        this.setState({
+            chatDetails: {...item}
+        })
+   }
 
     render() {
         return (
@@ -69,7 +86,9 @@ const ProductContext = React.createContext();
             changeFocus: this.changeFocus,
             fabToggle: this.fabToggle,
             textHandler: this.textHandler,
-            returnToDefault: this.returnToDefault
+            returnToDefault: this.returnToDefault,
+            loading: this.loading,
+            getDetail: this.getDetail
          
            
            }}

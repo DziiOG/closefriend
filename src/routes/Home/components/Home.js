@@ -23,6 +23,8 @@ export default class Home extends Component {
                 date: new Date()
             })
         }, 1000)
+
+
     }
 
     componentWillUnmount(){

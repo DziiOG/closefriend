@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Fab, Card, CardItem  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Dimensions, TouchableOpacity, Modal } from 'react-native'
+import { Dimensions, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { GiftedChat } from 'react-native-gifted-chat'
 import {
     Avatar,
@@ -10,6 +10,9 @@ import {
 import axios from 'axios'
 
 import Background from '../../../Components/Background';
+import ChatRoom from './ChatRoom'
+import ChatRoom2 from './ChatRoom2'
+import { ProductConsumer } from '../../../context'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -22,105 +25,67 @@ export default class Chats extends Component {
     }
 
     
-      
-         componentDidMount() {
-             this.setState({
-               messages: [
-                 {
-                   _id: 1,
-                   text: 'Hello developer',
-                   createdAt: new Date(),
-                   user: {
-                     _id: 2,
-                     name: 'React Native',
-                     avatar: 'https://placeimg.com/140/140/any',
-                   },
-                 },
-               ],
-             })
-           }
+      componentDidMount(){
+          this.props.getAllUsers()
+          console.log(
 
-           getFromFire = () => {
-               axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages",{
-                   
-               })
-           }
-         
-           onSend(messages = []) {
-             this.setState(previousState => ({
-               messages: GiftedChat.append(previousState.messages, messages),
-             }))
-           }
-         
-           sendToFire = (messages) =>{
-                axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages", {
-                    messages: messages,
-                    fullName: "Whitson"
-                }).then(response=> {
-                    console.log(response.data)
-                    this.onSend(messages)
-                }).catch(error=> console.log(error))
-           }
-    
+              this.props.users
+          )
+      }
+        
     
    
-    renderSection = () => {
+    renderSection = (value) => {
         if(this.state.activeIndex == 0){
             return(
-              <Fragment>
-                <View  style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15 }}>                                    
-                    <TouchableOpacity style={{flexDirection: 'column', }}>
-                    <Avatar.Image source={require('../../../assets/kioshi.png')}
-                                size={50}
-                                >
+       
+             (this.props.users.length == 0)? (
+                <View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
+                    <ActivityIndicator size='large'></ActivityIndicator>
+                </View>):
+                 
 
-                                </Avatar.Image>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{paddingLeft: 10, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }}>
-                        <Text style={{color: '#fff', fontSize: 14,marginTop: 8}}>Eric Danso</Text>
-                        <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
-                    </TouchableOpacity>
-                </View>
-                <View  style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15, marginTop: 10 }}>                                    
-                <TouchableOpacity style={{flexDirection: 'column', }}>
-                <Avatar.Image source={require('../../../assets/kioshi.png')}
-                            size={50}
-                            >
+                     this.props.users.map((item, index)=>(
+                        
+                        <ProductConsumer>
+                            {
+                                (value)=> (
 
-                            </Avatar.Image>
-                </TouchableOpacity>
-                <TouchableOpacity style={{paddingLeft: 10, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }}>
-                    <Text style={{color: '#fff', fontSize: 14,marginTop: 8}}>Eric Danso</Text>
-                    <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
-                </TouchableOpacity>
-            </View>
-
-              </Fragment>  
+                                    <View key={index} style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15, marginTop: index > 0? 15: 0 }}>                                    
+                                        <TouchableOpacity style={{flexDirection: 'column', }}>
+                                        <Avatar.Image source={require('../../../assets/kioshi.png')}
+                                                    size={50}
+                                                    >
+                    
+                                                    </Avatar.Image>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{paddingLeft: 25, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }} onPress={()=> {this.segmentClicked(1); value.getDetail(item)}}>
+                                            <Text style={{color: '#fff', fontSize: 14,marginTop: 8}}>{item.fullName}</Text>
+                                            <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )
+                            }
+                        </ProductConsumer>
+     
+           
+                     ))
+                 
+           
                
+           
             ) 
         }else if( this.state.activeIndex == 1){
 
             return(
-                <Modal style={{backgroundColor: '#d2d2d2'}}>
-
-                   
-                    
-                    <GiftedChat
-                    messages={this.state.messages}
-                    onSend={messages => this.sendToFire(messages)}
-                    user={{
-                      _id: 1,
-                        }}
-                  />
-                   
-                </Modal>
+                <ChatRoom value={value}></ChatRoom>
                 
             )
         }else if(this.state.activeIndex == 3){
             
                 return (
                
-                   this.renderSectionThree()
+                   <ChatRoom2></ChatRoom2>
                 
                 )
             
@@ -157,6 +122,7 @@ export default class Chats extends Component {
   
       
     render() {
+        
         return (
             <Background {...this.props} title="Chats" searchBar={true} contentRender={(props)=> 
             (
@@ -198,22 +164,7 @@ export default class Chats extends Component {
                                                         </Text>
                                                 </TouchableOpacity>
                                                 
-                                                <TouchableOpacity 
-                                                onPress={()=> this.segmentClicked(3)}
-                                                active={this.state.activeIndex == 3}
-                                                style={{
-                                                
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    width: 73, 
-                                                    height: 37, 
-                                                    backgroundColor:'transparent',
-                                                    }}
-                                                >
-                                                    <Text style={{fontSize: 12, textTransform: 'uppercase', color: this.state.activeIndex == 3 ? '#fff': '#aaa', textDecorationLine:this.state.activeIndex == 3 ? 'underline': 'none'}}>
-                                                            Groups
-                                                        </Text>
-                                                </TouchableOpacity>
+                                               
                                         </View>
 
                                         
@@ -227,7 +178,16 @@ export default class Chats extends Component {
                                 <Content style={{ flexDirection: 'row'}}>
                                     
                                   <View>
-                                      {this.renderSection()}
+                                  <ProductConsumer>
+                                      {
+                                          (value)=> 
+
+                                          (
+
+                                                this.renderSection(value)
+                                          )
+                                      }
+                                  </ProductConsumer>
                                   </View>
                                 </Content>
                             </CardItem>
