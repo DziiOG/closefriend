@@ -44,17 +44,17 @@ export class ChatRoom extends Component {
 
     
 
-      componentWillUnmount(){
+      componentWillUpdate(){
        //  clearInterval(
          //   this.myInterval
            //  )
 
-          // this.getFromFire()
+          this.getFromFire()
       }
       getFromFire = () => {
 
           axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
-            name: "qqmeWnsuyIgMgfzLerncLpR2cUg19mGWGqmK0kTVBl0Ncom5qwZMwag1"
+            name: this.props.route.params.chatroomId
           }).then((response)=>{
             this.setState({
               messages: response.data.messages
@@ -75,7 +75,7 @@ export class ChatRoom extends Component {
             this.onSend(messages)
            axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
                messages: this.state.messages,
-               name: "qqmeWnsuyIgMgfzLerncLpR2cUg19mGWGqmK0kTVBl0Ncom5qwZMwag1"
+               name: this.props.route.params.chatroomId
            }).then(response=> {
                //console.log(response.data)
                

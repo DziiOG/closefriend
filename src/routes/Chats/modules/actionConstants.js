@@ -1,3 +1,5 @@
 export default {
-    GET_ALL_USERS: "GET_ALL_USERS"
+    GET_ALL_USERS: "GET_ALL_USERS",
+    GET_CHATS_IDS: "GET_CHATS_IDS",
+    LOADING: "LOADING"
 }

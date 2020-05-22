@@ -32,6 +32,7 @@ export default (initialState = {}) => {
 
     const store = createStore(
        persistedReducer,
+       initialState,
         compose(applyMiddleware(...middleware), ...enhancers),
     );
 

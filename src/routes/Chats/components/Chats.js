@@ -23,13 +23,13 @@ var CANCEL_INDEX = 3;
 
 
 const checkIfChatRoomExists = (id1, id2, chatroomIds)  => {
-    let results = -1
+    let results = id1 + id2 
     chatroomIds.forEach(element => {
-        if(element.localeCompare(id1 + id2) == 0){
+        if(element.userId.localeCompare(id1 + id2) == 0){
            
-           results = 0 
-        }else if(element.localeCompare(id2 + id1) == 0){
-            results = 0
+           results = id1 + id2; 
+        }else if(element.userId.localeCompare(id2 + id1) == 0){
+            results = id2 + id1
         } 
     });
 
@@ -43,24 +43,32 @@ export default class Chats extends Component {
 
     state={
         activeIndex: 0,
-        chatrooms: ["promain", "diseases"],
+        chatrooms: [] || this.props.chatroomIDs,
         
     }
 
     
       componentDidMount(){
-          this.props.getAllUsers()
-          console.log(
+         // this.props.getAllUsers()
+         
+            //console.log(checkIfChatRoomExists('pro', 'main', this.state.chatrooms))
 
-               this.props.users
-          )
-            console.log(checkIfChatRoomExists('pro', 'main', this.state.chatrooms))
+           //this.props.getChatRoomIds();
 
-            axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/chatrooms").then((res)=>{
+           axios.get("https://us-central1-closefriend-1333a.cloudfunctions.net/chats").then((res)=>{
+            
+                this.setState({
+                    chatrooms: res.data.ids
+                })
+    
                 console.log(res.data)
+            }).then(()=>{
+               
+            })
+            .catch((res)=>{
+                console.log(error)
             })
 
-          
       }
         
       componentDidUpdate(){
@@ -111,7 +119,7 @@ export default class Chats extends Component {
                                                                                 this.props.navigation.navigate("Profile")
                                                                             }else if(this.state.clicked == "Message"){
                                                                                 this.props.navigation.navigate("ChatRoom", {
-                                                                                    chatroomId: item.userId + this.props.userId ,
+                                                                                    chatroomId:  checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms) ,
                                                                                     messages: [],
                                                                                     profileId: item.userId,
                                                                                     name: item.fullName,
@@ -192,9 +200,11 @@ export default class Chats extends Component {
     render() {
         
         return (
+        
             <Background {...this.props} title="Chats" searchBar={true} contentRender={(props)=> 
             (
                 <View style={{padding: 15, position: 'relative'}}>
+               
                     <Card style={{backgroundColor: 'transparent', borderColor: 'transparent', height: height * 0.7}}>
                     
                                     <CardItem style={{backgroundColor: 'transparent'}}>
