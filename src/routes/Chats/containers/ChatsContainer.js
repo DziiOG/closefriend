@@ -8,7 +8,8 @@ import {
 import Chats from '../components/Chats';
 
 const mapStateToProps = state => ({
- users: state.chats.users || []
+ users: state.chats.users || [],
+ userId: state.signin.userToken.userId || [] || state.signin.userToken.userId
 });
 
 const mapActionsCreators = {

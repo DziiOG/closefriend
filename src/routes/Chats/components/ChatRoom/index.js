@@ -31,7 +31,14 @@ export class ChatRoom extends Component {
         */
 
        // this.myInterval = setInterval(()=> this.getFromFire(), 3500)
-        this.getFromFire()
+        //this.getFromFire()
+        axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
+          name: "testChatroom"
+        }).then((response)=>{
+          this.setState({
+            messages: response.data.messages
+          })
+        }).catch(err=> err.code)
        
        
       }
@@ -47,11 +54,12 @@ export class ChatRoom extends Component {
          //   this.myInterval
            //  )
 
-           this.getFromFire()
+          // this.getFromFire()
       }
       getFromFire = () => {
           axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/user/messages",{
-              userId: this.props.value.chatDetails.userId
+              //userId: this.props.value.chatDetails.userId
+              userId: "GUILHn3NDDfOSclJwsyQ0erGsI32"
           }).then(res=> {
               console.log(res.data);
               if(res.data.length !== 0){
@@ -107,7 +115,8 @@ export class ChatRoom extends Component {
        }
           ).then(()=>{
             axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages", {
-                fullName: this.props.value.chatDetails.fullName
+              //fullName: this.props.value.chatDetails.fullName
+               fullName: "Whitson"
             }).then(response=> {
                 //console.log(response.data)
                 //this.onSend(messages)
@@ -135,7 +144,7 @@ export class ChatRoom extends Component {
       sendToFire = (messages) =>{
            axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages", {
                messages: messages,
-               fullName: "Whitson"
+               fullName: "Lafa"
            }).then(response=> {
                //console.log(response.data)
                this.onSend(messages)
@@ -147,7 +156,23 @@ export class ChatRoom extends Component {
            }
            )
            .then((response)=>{
-               
+            axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
+              messages: this.state.messages,
+              name: "testChatroom"
+          }).then(response=> {
+              //console.log(response.data)
+              //this.onSend(messages)
+              return response.data
+          }).then((response)=>{ 
+              //console.log(this.state.messages)
+          
+              return response
+          }
+          )
+          .then((response)=>{
+           
+          })
+          .catch(error=> console.log(error))
            })
            .catch(error=> console.log(error))
       }
@@ -165,7 +190,7 @@ export class ChatRoom extends Component {
                     messages={this.state.messages}
                     onSend={messages => this.sendToFire(messages)}
                     user={{
-                        _id: 34
+                        _id: 56
                     }}
                   />
           

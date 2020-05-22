@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Fab, Card, CardItem  } from 'native-base'
+import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Fab, Card, CardItem, ActionSheet  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Dimensions, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
 import { GiftedChat } from 'react-native-gifted-chat'
@@ -16,12 +16,35 @@ import { ProductConsumer } from '../../../context'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
+var Buttons = ['Message', 'View Profile'];
+
+var DESTRUCTIVE_INDEX = 2;
+var CANCEL_INDEX = 3;
+
+
+const checkIfChatRoomExists = (id1, id2, chatroomIds)  => {
+    let results = -1
+    chatroomIds.forEach(element => {
+        if(element.localeCompare(id1 + id2) == 0){
+           
+           results = 0 
+        }else if(element.localeCompare(id2 + id1) == 0){
+            results = 0
+        } 
+    });
+
+
+   return results 
+}
+
+
 export default class Chats extends Component {
    
 
     state={
         activeIndex: 0,
-        messages: []
+        chatrooms: ["promain", "diseases"],
+        
     }
 
     
@@ -29,10 +52,20 @@ export default class Chats extends Component {
           this.props.getAllUsers()
           console.log(
 
-              this.props.users
+               this.props.users
           )
+            console.log(checkIfChatRoomExists('pro', 'main', this.state.chatrooms))
+
+            axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/chatrooms").then((res)=>{
+                console.log(res.data)
+            })
+
+          
       }
         
+      componentDidUpdate(){
+         // console.log(this.state
+      }
     
    
     renderSection = (value) => {
@@ -49,21 +82,53 @@ export default class Chats extends Component {
                         
                         <ProductConsumer>
                             {
-                                (value)=> (
+                                (value)=> item.userId !== this.props.userId ? (
+                                    
 
                                     <View key={index} style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15, marginTop: index > 0? 15: 0 }}>                                    
-                                        <TouchableOpacity style={{flexDirection: 'column', }}>
+                                        <TouchableOpacity style={{flexDirection: 'column', }} onPress={()=>{
+                                         
+
+                                        }}>
                                         <Avatar.Image source={require('../../../assets/kioshi.png')}
                                                     size={50}
                                                     >
                     
                                                     </Avatar.Image>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{paddingLeft: 25, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }} onPress={()=> {this.segmentClicked(1); value.getDetail(item)}}>
+                                        <TouchableOpacity style={{paddingLeft: 25, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }} onPress={()=> {
+                                               ActionSheet.show(
+                                                             {
+                                                                        options: Buttons,
+                                                                        cancelButtonIndex: CANCEL_INDEX,
+                                                                        destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                                                                        title: "Actions"
+                                                             },
+                                                             buttonIndex => {
+                                                                    this.setState({ clicked: Buttons[buttonIndex] },
+                                                                        ()=> {
+                                                                            if(this.state.clicked == "View Profile"){
+                                                                                this.props.navigation.navigate("Profile")
+                                                                            }else if(this.state.clicked == "Message"){
+                                                                                this.props.navigation.navigate("ChatRoom", {
+                                                                                    chatroomId: item.userId + this.props.userId ,
+                                                                                    messages: [],
+                                                                                    profileId: item.userId,
+                                                                                    name: item.fullName,
+                                                                                    userId:this.props.userId 
+                                                                                })
+                                                                            }
+                                                                        }
+                                                                    );
+                                                                }
+                                            )
+                                        }}>
                                             <Text style={{color: '#fff', fontSize: 14,marginTop: 8}}>{item.fullName}</Text>
-                                            <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
+                                            <Text style={{color: '#ccc', fontSize: 11 }} note></Text>
                                         </TouchableOpacity>
                                     </View>
+                                ) : (
+                                    null
                                 )
                             }
                         </ProductConsumer>
@@ -78,8 +143,11 @@ export default class Chats extends Component {
         }else if( this.state.activeIndex == 1){
 
             return(
-                <ChatRoom value={value}></ChatRoom>
-                
+               <Container style={{backgroundColor: '#fff'}}>
+                <Content>
+
+                </Content>
+               </Container>
             )
         }else if(this.state.activeIndex == 3){
             

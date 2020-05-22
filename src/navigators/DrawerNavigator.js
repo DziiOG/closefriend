@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux'
 
 
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
@@ -29,8 +30,12 @@ import AlarmContainer from '../routes/Alarm/containers/AlarmContainer'
 import SettingsContainer from '../routes/Settings/containers/SettingsContainer'
 import ProfileContainer from '../routes/Profile/containers/ProfileContainer'
 import ChatsContainer from '../routes/Chats/containers/ChatsContainer'
+import RootStackScreen from './RootStackNavigator';
+import { ProductConsumer } from '../context';
+import { signUserOut } from '../routes/SignIn/modules/signinscreen';
 
-
+import { signUserOut as signout } from '../routes/SignUp/modules/signupscreen'
+import ChatRoomContainer from '../routes/ChatRoom/containers/ChatRoomContainer';
 
 
 
@@ -54,19 +59,35 @@ const Drawers = createDrawerNavigator();
 
 
 
-export default function MyDrawer() {
+function MyDrawer({userToken, signUserOut, signout, username}) {
   return (
-    <NavigationContainer >
-      <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props}></CustomDrawerContent>}>
-        <Drawers.Screen name="Home"  component={HomeContainer} />
-        <Drawers.Screen name="Alarm" component={AlarmContainer} />
-        <Drawers.Screen name="Profile" component={ProfileContainer} />
-        <Drawers.Screen name="Compose" component={ComposeContainer} />
-        <Drawers.Screen name="Chats" component={ChatsContainer} />
-        <Drawers.Screen name="Settings" component={SettingsContainer} />
-       
-      </Drawers.Navigator>
-    </NavigationContainer>
+    <ProductConsumer >
+      {
+        (value)=>(
+            (userToken.token) ?
+          <NavigationContainer >
+            <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props} signUserOut={signUserOut} signout={signout} ></CustomDrawerContent>}>
+              <Drawers.Screen name="Home"  component={HomeContainer} />
+              <Drawers.Screen name="Alarm" component={AlarmContainer} />
+              <Drawers.Screen name="Profile" component={ProfileContainer} />
+              <Drawers.Screen name="Compose" component={ComposeContainer} />
+              <Drawers.Screen name="Chats" component={ChatsContainer} />
+              <Drawers.Screen name="Settings" component={SettingsContainer} />
+              <Drawers.Screen name="ChatRoom" component={ChatRoomContainer} />
+            </Drawers.Navigator>
+            {
+                
+                value.getUserName(userToken.userId)
+              }
+             
+          </NavigationContainer>:
+          <NavigationContainer>
+              <RootStackScreen></RootStackScreen>
+             
+          </NavigationContainer>
+        )
+      }
+    </ProductConsumer>
   );
 }
 
@@ -80,6 +101,10 @@ function CustomDrawerContent(props) {
 }
 
   return (
+    <ProductConsumer>
+      {
+        (value)=>(
+
     <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
@@ -92,9 +117,9 @@ function CustomDrawerContent(props) {
                             >
 
                             </Avatar.Image>
-                            <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                                <Title style ={styles.title}>Full Name</Title>
-                                <Text note>email@email.com</Text>
+                            <View style={{marginLeft: 15, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+                                <Text  style={styles.title}>{value.username}</Text>
+                                
                             </View>
                         </View>
 
@@ -205,12 +230,15 @@ function CustomDrawerContent(props) {
 
                     </Icon>
                 )} label="Sign Out"
-                onPress={()=> {console.log('You pressed me')}}
+                onPress={()=> {props.signUserOut();  props.signout()}}
                 >
 
                 </DrawerItem>
             </Drawer.Section>
         </View>
+        )
+      }
+    </ProductConsumer>
   );
 }
 
@@ -310,3 +338,21 @@ const styles = StyleSheet.create({
       paddingHorizontal: 15,
   }
 })
+
+
+
+const mapStateToProps = state => ({
+  userID: state.signin.userID || "" || state.signup.userID,
+  userToken: state.signin.userToken || "" || state.signup.userToken,
+  username:  state.signin.username || "" 
+  
+});
+const mapActionsCreators = {
+  signUserOut,
+  signout
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsCreators,
+)(MyDrawer);

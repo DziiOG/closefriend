@@ -5,9 +5,12 @@ import { ImageBackground, Dimensions, StyleSheet, Keyboard } from 'react-native'
 //import HeaderComponent from '../../../Components/Header'
 import LinearGradient from 'react-native-linear-gradient';
 import { TouchableOpacity } from 'react-native';
-import { ProductConsumer } from '../../../context';
+import axios from 'axios'
+
 import MainDateComponent from './MainDateComponent.js';
 import Background from '../../../Components/Background';
+import { ProductConsumer } from '../../../context.js';
+import Username from './name/index.js';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -15,6 +18,7 @@ const height = Dimensions.get('window').height;
 export default class Home extends Component {
     state = {        
         date: new Date(),
+        username: ''
     }
 
     componentDidMount(){
@@ -23,6 +27,13 @@ export default class Home extends Component {
                 date: new Date()
             })
         }, 1000)
+
+
+        
+        //console.log(this.props.userID)
+
+       
+       
 
 
     }
@@ -80,6 +91,9 @@ export default class Home extends Component {
                                  {
                                      this.dateTime()
                                  }
+                                 
+                                
+                               
                             </View>
                 )}>
               

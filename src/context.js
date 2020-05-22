@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 
 
 const ProductContext = React.createContext();
@@ -13,7 +14,10 @@ const ProductContext = React.createContext();
         titleCompose: "",
         taskCompose: "",
         loading:false,
-        chatDetails: {}
+        chatDetails: {},
+        token: '',
+        userId: '',
+        username: ''
     }
 
 
@@ -79,6 +83,26 @@ const ProductContext = React.createContext();
         })
    }
 
+
+
+   getUserName = (id)=> {
+    axios
+    .post('https://us-central1-closefriend-1333a.cloudfunctions.net/api/user', {
+        userId: id
+    })
+    .then(results => {
+      this.setState({
+          username: results.data
+      })
+        
+    
+    })
+    .catch(err => {
+    console.log(err);
+    });
+}
+ 
+
     render() {
         return (
            <ProductContext.Provider
@@ -88,7 +112,9 @@ const ProductContext = React.createContext();
             textHandler: this.textHandler,
             returnToDefault: this.returnToDefault,
             loading: this.loading,
-            getDetail: this.getDetail
+            getDetail: this.getDetail,
+            getUserName:this.getUserName
+           
          
            
            }}

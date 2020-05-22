@@ -9,7 +9,7 @@ export default class Root extends Component {
         const store = createStore(initialState);
 
         return (
-           <AppContainer store={store}>
+           <AppContainer store={store.store}  persistor={store.persistor}>
                
            </AppContainer>
         )

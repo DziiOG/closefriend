@@ -1,18 +1,19 @@
 import { combineReducers } from 'redux';
 
 import { homeReducer as home } from "../routes/Home/modules/home";
-//import { loginReducer as login } from "../routes/Login/modules/login";
+import { signinscreenReducer as signin } from "../routes/SignIn/modules/signinscreen";
 
 import { settingsReducer as settings } from "../routes/Settings/modules/settings";
-//import { signupReducer as signup } from "../routes/SignUp/modules/signup";
+import { signupscreenReducer as signup } from "../routes/SignUp/modules/signupscreen";
 
 
 import { profileReducer as profile } from "../routes/Profile/modules/profile";
-//import { userprofileReducer as userprofile } from "../routes/Profile/modules/userprofile";
+import { splashscreenReducer as splash } from "../routes/Splash/modules/splashscreen";
 
 import { chatsReducer as chats } from "../routes/Chats/modules/chats";
 import { composeReducer as compose } from "../routes/Compose/modules/compose";
 import { alarmReducer as alarm } from "../routes/Alarm/modules/alarm";
+import { chatroomReducer as chatroom } from "../routes/ChatRoom/modules/chatroom";
 
 
 
@@ -25,7 +26,12 @@ export const makeRootReducer = () => {
         profile,
         chats,
         compose,
-        alarm
+        alarm, 
+        signup,
+        signin,
+        splash,
+        chatroom
+
     })
 }
 
