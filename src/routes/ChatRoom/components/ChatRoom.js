@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { Text, View, Dimensions, Modal } from 'react-native'
+import React, { Component, Fragment } from 'react'
+import { Text, View, Dimensions, Modal, BackHandler } from 'react-native'
 import { Container } from 'native-base'
 import { GiftedChat } from 'react-native-gifted-chat'
+import { Platform, KeyboardAvoidingView, SafeAreaView } from 'react-native'
 import axios from 'axios'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -11,49 +12,71 @@ export class ChatRoom extends Component {
 
     state={
     
-        messages: []
+        messages: [] || this.props.route.params.messages,
+        date: new Date()
+        
     }
 
     
 
     componentDidMount() {
-        /*
-        this.setState({
-          messages: [
-            {
-              _id: 1,
-              text: 'Hello developer',
-              createdAt: new Date(),
-              user: {
-                _id: 2,
-                name: 'React Native',
-                avatar: 'https://placeimg.com/140/140/any',
-              },
-            },
-          ],
-        })
-        */
 
-       // this.myInterval = setInterval(()=> this.getFromFire(), 3500)
-        //this.getFromFire()
+    
+      this.myInterval = setInterval(()=>{
+        this.getFromFire()
+    }, 5000)
        
-       console.log(this.props.route.params.chatroomId)
+       //this.getFromFire()
+      this.backhandler = BackHandler.addEventListener('hardwareBackPress', this.set)
 
-       this.getFromFire()
+      //console.log(this.state.messages.length)
+      console.log(this.props.requiredMessages)
+      }
+
+     
+      set = () => {
+       
+        this.onThego()
+        
+         this.setState({
+           messages: []
+         })
       }
 
     
+      componentWillUnmount(){
+        clearInterval(this.myInterval)
+    }
 
-      componentWillUpdate(){
-       //  clearInterval(
-         //   this.myInterval
-           //  )
 
-          this.getFromFire()
+      onThego = (messages = []) => {
+       // let messages = this.state.messages;
+        let chatroomId = this.props.route.params.chatroomId
+
+        const saveMessages = 
+          {
+
+            messages:  GiftedChat.append(this.state.messages, messages),
+            chatroomId: chatroomId
+          }
+        
+        
+
+
+      
+        this.props.getChatMessages(saveMessages)
+
+          
+          
+
+      
       }
-      getFromFire = () => {
 
-          axios.put("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
+
+      getFromFire = () => {
+       
+        
+          axios.put("/messages/chatroom", {
             name: this.props.route.params.chatroomId
           }).then((response)=>{
             this.setState({
@@ -66,15 +89,19 @@ export class ChatRoom extends Component {
       }
     
       onSend(messages = []) {
+
         this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, messages),
+          messages: GiftedChat.append(previousState.messages.length == 0? this.props.requiredMessages : previousState.messages, messages),
         }))
+
+       
       }
     
       sendToFire = (messages) =>{
             this.onSend(messages)
-           axios.post("https://us-central1-closefriend-1333a.cloudfunctions.net/api/messages/chatroom", {
-               messages: this.state.messages,
+
+           axios.post("/messages/chatroom", {
+               messages:  GiftedChat.append(this.state.messages, messages),
                name: this.props.route.params.chatroomId
            }).then(response=> {
                //console.log(response.data)
@@ -88,21 +115,31 @@ export class ChatRoom extends Component {
 
     render() {
 
-        return (
-            <Modal>
+     
+                      if(Platform.OS === 'android'){
+                        return (
+                         <Fragment>
 
-          
-              
-               <GiftedChat
-                    messages={this.state.messages}
-                    onSend={messages => this.sendToFire(messages)}
-                    user={{
-                        _id: this.props.route.params.userId
-                    }}
-                  />
-          
-            </Modal>
-        )
+                            <GiftedChat
+                            messages={this.state.messages}
+                            onSend={messages => {
+                              this.sendToFire(messages)
+                             // this.onThego(messages)
+                            }}
+                            user={{
+                                _id: this.props.route.params.userId
+                            }}
+                        />
+                          
+                            
+                          
+                         </Fragment>
+                            
+                        )
+                      }
+
+
+                     
     }
 }
 

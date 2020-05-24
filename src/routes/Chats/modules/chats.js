@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ProductConsumer } from "../../../context";
 import { AppLoading } from "expo";
 
-const {GET_ALL_USERS, GET_CHATS_IDS, LOADING} = constants;
+const {GET_ALL_USERS, GET_CHATS_IDS, LOADING, SAVE_MESSAGES_TO_REDUX, REQUIRED_CHATROOM_MESSAGES} = constants;
 
 
 
@@ -18,7 +18,7 @@ export function getAllUsers(){
             payload: true
         })
         
-        axios.get("https://us-central1-closefriend-1333a.cloudfunctions.net/api/users").then((response)=>{
+        axios.get("/users").then((response)=>{
            
             dispatch({
                 type:GET_ALL_USERS,
@@ -50,7 +50,7 @@ export function getChatRoomIds(){
             payload: true
         })
 
-        axios.get("https://us-central1-closefriend-1333a.cloudfunctions.net/chats").then((res)=>{
+        axios.get("/chats").then((res)=>{
             
         dispatch({
             type:GET_CHATS_IDS,
@@ -80,9 +80,50 @@ export function getChatRoomIds(){
 
 
 
+export function getChatMessages(payload){
+    
+    return(
+        {
+            type: SAVE_MESSAGES_TO_REDUX,
+            payload
+            }
+    )
+}
 
 
 
+export function getRequiredChatRoomMessages(messages = [], id){
+    return((dispatch)=>{
+        let results = [];
+        messages.forEach(element => {
+            if(element.chatroomId == id){
+                if(element.messages.length !== 0){
+
+                  
+                    results.push(element.messages)
+                }
+
+                
+            }
+        });
+
+        if(results[0] !== undefined){
+
+            dispatch({
+                type: REQUIRED_CHATROOM_MESSAGES,
+                payload: results[0],
+            })
+            console.log(results[0])
+        }else{
+            dispatch({
+                type: REQUIRED_CHATROOM_MESSAGES,
+                payload: results,
+            })
+          //  console.log(results)
+        }
+    })
+    
+}
 
 
 
@@ -133,6 +174,13 @@ function handleLoading(state, action){
 
 }
 
+function handleGetRequiredChatRoomMessage(state, action){
+    return update(state, {
+        requiredMessages: {
+            $set: action.payload
+        }
+    })
+}
 
 
 
@@ -140,19 +188,33 @@ function handleLoading(state, action){
 
 
 
+
+function handlegetMessages(state, action){
+
+    return update(state, {
+        
+        messages: {
+            $set:  [...state.messages, action.payload]
+        }
+    })
+}
 
 
 
 const ACTION_HANDLERS = {
     GET_ALL_USERS: handlegetAllUsers,
     GET_CHATS_IDS: handlegetChatRoomIds,
-    LOADING: handleLoading
+    LOADING: handleLoading,
+    SAVE_MESSAGES_TO_REDUX: handlegetMessages,
+    REQUIRED_CHATROOM_MESSAGES: handleGetRequiredChatRoomMessage
 }
 
 const initialState = {
     users: [],
     chatroomIDs: [],
-    loading: false
+    loading: false,
+    messages: [],
+    requiredMessages: []
 };
 
 export function chatsReducer (state = initialState, action){

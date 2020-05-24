@@ -2,16 +2,12 @@ import React, { Component, Fragment } from 'react'
 import { Text, View, Button, Container, Content, Header, Left, Right, InputGroup, Input, Icon, Fab, Card, CardItem, ActionSheet  } from 'native-base'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Dimensions, TouchableOpacity, Modal, ActivityIndicator } from 'react-native'
-import { GiftedChat } from 'react-native-gifted-chat'
 import {
-    Avatar,
+    Avatar, Divider,
     
 } from 'react-native-paper';
 import axios from 'axios'
-
 import Background from '../../../Components/Background';
-import ChatRoom from './ChatRoom'
-import ChatRoom2 from './ChatRoom2'
 import { ProductConsumer } from '../../../context'
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -49,25 +45,16 @@ export default class Chats extends Component {
 
     
       componentDidMount(){
-         // this.props.getAllUsers()
+          this.props.getAllUsers()
          
             //console.log(checkIfChatRoomExists('pro', 'main', this.state.chatrooms))
 
-           //this.props.getChatRoomIds();
+           this.props.getChatRoomIds();
 
-           axios.get("https://us-central1-closefriend-1333a.cloudfunctions.net/chats").then((res)=>{
-            
-                this.setState({
-                    chatrooms: res.data.ids
-                })
-    
-                console.log(res.data)
-            }).then(()=>{
-               
-            })
-            .catch((res)=>{
-                console.log(error)
-            })
+          console.log(this.props.users);
+          console.log(this.props.chatroomIDs)
+
+         
 
       }
         
@@ -88,12 +75,13 @@ export default class Chats extends Component {
 
                      this.props.users.map((item, index)=>(
                         
-                        <ProductConsumer>
+                        <ProductConsumer key={item.userId}>
                             {
                                 (value)=> item.userId !== this.props.userId ? (
                                     
 
-                                    <View key={index} style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15, marginTop: index > 0? 15: 0 }}>                                    
+                                    <View key={item.userId} style={{flexDirection: 'row', marginTop: 0, paddingHorizontal: 15, marginTop: index > 0? 15: 0 , width: width}}>   
+                                    <Divider style={{borderColor: '#fff'}} ></Divider>                                 
                                         <TouchableOpacity style={{flexDirection: 'column', }} onPress={()=>{
                                          
 
@@ -105,6 +93,7 @@ export default class Chats extends Component {
                                                     </Avatar.Image>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={{paddingLeft: 25, flexDirection: 'column', borderBottomColor: '#fff', alignItems: 'center', }} onPress={()=> {
+                                           
                                                ActionSheet.show(
                                                              {
                                                                         options: Buttons,
@@ -118,12 +107,15 @@ export default class Chats extends Component {
                                                                             if(this.state.clicked == "View Profile"){
                                                                                 this.props.navigation.navigate("Profile")
                                                                             }else if(this.state.clicked == "Message"){
+                                                                              //  this.props.getRequiredChatRoomMessages(this.props.messages, checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms))
+
                                                                                 this.props.navigation.navigate("ChatRoom", {
                                                                                     chatroomId:  checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms) ,
-                                                                                    messages: [],
+                                                                                    messages:  [] ,
                                                                                     profileId: item.userId,
-                                                                                    name: item.fullName,
-                                                                                    userId:this.props.userId 
+                                                                                    name: item.username,
+                                                                                    userId:this.props.userId,
+                                                                                   // getMessages: this.props.getChatMessages 
                                                                                 })
                                                                             }
                                                                         }
@@ -131,9 +123,22 @@ export default class Chats extends Component {
                                                                 }
                                             )
                                         }}>
-                                            <Text style={{color: '#fff', fontSize: 14,marginTop: 8}}>{item.fullName}</Text>
-                                            <Text style={{color: '#ccc', fontSize: 11 }} note></Text>
+                                        <View>
+                                            <Text style={{color: '#fff', fontSize: 14,marginTop: 8, }}>{item.usernsme}</Text>
+                                            
+                                            <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
+                                        </View>
                                         </TouchableOpacity>
+                                        
+                                        <View style={{left: 80, alignItems: 'center', justifyContent: 'center'}}>
+                                            <TouchableOpacity>
+                                                <Icon name="ios-checkmark-circle-outline" size={1}>
+
+                                                </Icon>
+                                            </TouchableOpacity>
+                                        </View>
+                                        
+                                        <Divider style={{borderColor: '#fff'}} ></Divider>
                                     </View>
                                 ) : (
                                     null
@@ -161,7 +166,9 @@ export default class Chats extends Component {
             
                 return (
                
-                   <ChatRoom2></ChatRoom2>
+                   <View>
+
+                   </View>
                 
                 )
             
@@ -200,9 +207,11 @@ export default class Chats extends Component {
     render() {
         
         return (
+            
         
             <Background {...this.props} title="Chats" searchBar={true} contentRender={(props)=> 
             (
+                (this.props.users.length !== 0 && this.props.loading == false)?
                 <View style={{padding: 15, position: 'relative'}}>
                
                     <Card style={{backgroundColor: 'transparent', borderColor: 'transparent', height: height * 0.7}}>
@@ -271,6 +280,13 @@ export default class Chats extends Component {
                             </CardItem>
                         </Content>
                     </Card>
+                </View> : <View style={{
+                    color: "rgba(90, 93, 165, 1)",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1
+                }}>
+                    <ActivityIndicator size="large"></ActivityIndicator>
                 </View>
                 
                 )}>

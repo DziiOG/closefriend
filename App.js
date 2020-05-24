@@ -2,6 +2,7 @@ import 'react-native-gesture-handler'
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Root from './src/main';
+import axios from 'axios';
 
 
 
@@ -19,3 +20,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+
+axios.defaults.baseURL = 'https://us-central1-halo-84fb8.cloudfunctions.net/api';

@@ -17,7 +17,8 @@ const log = createLogger({
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['home', 'signup', 'signin', 'profile', 'compose', 'chats', 'alarm', 'settings', 'splash', 'chatroom']
+    whitelist: ['home', 'signup', 'signin', 'profile', 'compose', 'chats', 'alarm', 'settings', 'splash',],
+    blacklist: ['chatroom']
   }
 
   const persistedReducer = persistReducer(persistConfig, makeRootReducer())

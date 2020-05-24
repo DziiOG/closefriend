@@ -74,10 +74,10 @@ export class SignUpScreen extends Component {
         });
     
         axios
-          .post('https://us-central1-closefriend-1333a.cloudfunctions.net/api/signup', {
+          .post('/signup', {
             email: this.state.email,
             password: this.state.password,
-            fullName: this.state.username
+            username: this.state.username
           })
           .then(results => {
            // console.log(results.data.token);
@@ -195,7 +195,7 @@ export class SignUpScreen extends Component {
                     </View>
                     {
                         (this.state.errors)? <View>
-                            <Text style={{color: '#ff0000'}}>{ this.state.errors.fullName }</Text>
+                            <Text style={{color: '#ff0000'}}>{ this.state.errors.username }</Text>
                         </View>: null
                     }
                     <Text style={[styles.text_footer, {

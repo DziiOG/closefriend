@@ -60,7 +60,7 @@ export class SignInScreen extends Component {
         });
     
         axios
-          .post('https://us-central1-closefriend-1333a.cloudfunctions.net/api/login', {
+          .post('/login', {
             email: this.state.email,
             password: this.state.password,
           })

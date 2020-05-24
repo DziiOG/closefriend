@@ -87,7 +87,7 @@ const ProductContext = React.createContext();
 
    getUserName = (id)=> {
     axios
-    .post('https://us-central1-closefriend-1333a.cloudfunctions.net/api/user', {
+    .post('/user', {
         userId: id
     })
     .then(results => {
