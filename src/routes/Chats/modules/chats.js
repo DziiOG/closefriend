@@ -4,11 +4,37 @@ import axios from 'axios'
 import { ProductConsumer } from "../../../context";
 import { AppLoading } from "expo";
 
-const {GET_ALL_USERS, GET_CHATS_IDS, LOADING, SAVE_MESSAGES_TO_REDUX, REQUIRED_CHATROOM_MESSAGES} = constants;
+const {GET_ALL_USERS, GET_CHATS_IDS, LOADING, SAVE_MESSAGES_TO_REDUX, REQUIRED_CHATROOM_MESSAGES, GET_ALL_CHAT_MESSAGES_FROM_FIRE} = constants;
 
 
 
 //ACTIONS
+export function getAllChatMessagesFromFirebase(){
+    
+    return((dispatch)=>{
+        dispatch({
+            type:LOADING,
+            payload: true
+        })
+        axios.get("/allchats").then(response=>{
+            dispatch({
+                type: GET_ALL_CHAT_MESSAGES_FROM_FIRE,
+                payload: response.data.messages
+            })
+        }).then(()=>{
+            dispatch({
+                type:LOADING,
+                payload: false
+            })
+        }).catch(error=>{
+            dispatch({
+                type:LOADING,
+                payload: false
+            })
+            console.log(error)
+        })
+    })
+}
 
 
 export function getAllUsers(){
@@ -96,7 +122,7 @@ export function getRequiredChatRoomMessages(messages = [], id){
     return((dispatch)=>{
         let results = [];
         messages.forEach(element => {
-            if(element.chatroomId == id){
+            if(element.userId == id){
                 if(element.messages.length !== 0){
 
                   
@@ -199,6 +225,13 @@ function handlegetMessages(state, action){
     })
 }
 
+function handleGetAllChatMessagesFromFire(state, action){
+    return update(state, {
+        allMessages: {
+            $set: action.payload
+        }
+    })
+}
 
 
 const ACTION_HANDLERS = {
@@ -206,7 +239,8 @@ const ACTION_HANDLERS = {
     GET_CHATS_IDS: handlegetChatRoomIds,
     LOADING: handleLoading,
     SAVE_MESSAGES_TO_REDUX: handlegetMessages,
-    REQUIRED_CHATROOM_MESSAGES: handleGetRequiredChatRoomMessage
+    REQUIRED_CHATROOM_MESSAGES: handleGetRequiredChatRoomMessage,
+    GET_ALL_CHAT_MESSAGES_FROM_FIRE: handleGetAllChatMessagesFromFire
 }
 
 const initialState = {
@@ -214,7 +248,8 @@ const initialState = {
     chatroomIDs: [],
     loading: false,
     messages: [],
-    requiredMessages: []
+    requiredMessages: [],
+    allMessages: []
 };
 
 export function chatsReducer (state = initialState, action){

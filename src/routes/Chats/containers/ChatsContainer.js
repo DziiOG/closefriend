@@ -6,8 +6,13 @@ import {
  getAllUsers,
  getChatRoomIds,
  getChatMessages,
- getRequiredChatRoomMessages
+ getRequiredChatRoomMessages,
+ getAllChatMessagesFromFirebase
 } from '../modules/chats';
+
+import {
+  sendToFire
+} from '../../ChatRoom/modules/chatroom'
 import Chats from '../components/Chats';
 
 const mapStateToProps = state => ({
@@ -16,14 +21,17 @@ const mapStateToProps = state => ({
  chatroomIDs: state.chats.chatroomIDs,
  loading: state.chats.loading,
  messages: state.chats.messages || [],
- requiredMessages: state.chats.requiredMessages || []
+ requiredMessages: state.chats.requiredMessages || [],
+ allMessages: state.chats.allMessages || []
 });
 
 const mapActionsCreators = {
   getAllUsers,
   getChatRoomIds,
   getChatMessages,
-  getRequiredChatRoomMessages
+  getRequiredChatRoomMessages,
+  getAllChatMessagesFromFirebase,
+  sendToFire
 };
 
 export default connect(mapStateToProps, mapActionsCreators)(Chats);

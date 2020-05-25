@@ -45,14 +45,14 @@ export default class Chats extends Component {
 
     
       componentDidMount(){
+         // this.props.getAllChatMessagesFromFirebase()
           this.props.getAllUsers()
          
             //console.log(checkIfChatRoomExists('pro', 'main', this.state.chatrooms))
 
-           this.props.getChatRoomIds();
+           //this.props.getChatRoomIds();
 
-          console.log(this.props.users);
-          console.log(this.props.chatroomIDs)
+        
 
          
 
@@ -105,15 +105,24 @@ export default class Chats extends Component {
                                                                     this.setState({ clicked: Buttons[buttonIndex] },
                                                                         ()=> {
                                                                             if(this.state.clicked == "View Profile"){
-                                                                                this.props.navigation.navigate("Profile")
-                                                                            }else if(this.state.clicked == "Message"){
-                                                                              //  this.props.getRequiredChatRoomMessages(this.props.messages, checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms))
 
+
+                                                                                this.props.navigation.navigate("Profile",{
+                                                                                    email: item.email,
+                                                                                    bio: item.Profile.Bio,
+                                                                                    occupation: item.Profile.Occupation,
+                                                                                    fullName: item.fullName
+                                                                                })
+                                                                            }else if(this.state.clicked == "Message"){
+                                                                                this.props.getRequiredChatRoomMessages(this.props.allMessages, checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms))
+                                                                                    console.log(this.props.requiredMessages)
+
+                                                                                    this.props.sendToFire(checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms))
                                                                                 this.props.navigation.navigate("ChatRoom", {
                                                                                     chatroomId:  checkIfChatRoomExists(item.userId, this.props.userId, this.state.chatrooms) ,
-                                                                                    messages:  [] ,
+                                                                                    messages: this.props.requiredMessages ,
                                                                                     profileId: item.userId,
-                                                                                    name: item.username,
+                                                                                    name: item.fullName,
                                                                                     userId:this.props.userId,
                                                                                    // getMessages: this.props.getChatMessages 
                                                                                 })
@@ -124,19 +133,13 @@ export default class Chats extends Component {
                                             )
                                         }}>
                                         <View>
-                                            <Text style={{color: '#fff', fontSize: 14,marginTop: 8, }}>{item.usernsme}</Text>
+                                            <Text style={{color: '#fff', fontSize: 14,marginTop: 8, }}>{item.fullName}</Text>
                                             
                                             <Text style={{color: '#ccc', fontSize: 11 }} note>Web Developer</Text>
                                         </View>
                                         </TouchableOpacity>
                                         
-                                        <View style={{left: 80, alignItems: 'center', justifyContent: 'center'}}>
-                                            <TouchableOpacity>
-                                                <Icon name="ios-checkmark-circle-outline" size={1}>
-
-                                                </Icon>
-                                            </TouchableOpacity>
-                                        </View>
+                                        
                                         
                                         <Divider style={{borderColor: '#fff'}} ></Divider>
                                     </View>
@@ -234,23 +237,7 @@ export default class Chats extends Component {
                                                             USERS
                                                         </Text>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity 
-                                                onPress={()=> this.segmentClicked(1)}
-                                                active={this.state.activeIndex == 1}
-                                                style={{
-                                                
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    width: 73, 
-                                                    height: 37, 
-                                                    backgroundColor:'transparent',
-                                                    }}
-                                                >
-                                                    <Text  style={{fontSize: 12, textTransform: 'uppercase', color: this.state.activeIndex == 1 ? '#fff': '#aaa', textDecorationLine:this.state.activeIndex == 1 ? 'underline': 'none'}}>
-                                                            Messages
-                                                        </Text>
-                                                </TouchableOpacity>
-                                                
+                                               
                                                
                                         </View>
 

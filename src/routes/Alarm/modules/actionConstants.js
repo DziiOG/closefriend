@@ -1,3 +1,3 @@
 export default {
-    
+    GET_TASKS_FROM_FIRE_BASE: "GET_TASKS_FROM_FIRE_BASE"
 }

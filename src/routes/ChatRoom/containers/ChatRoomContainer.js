@@ -11,6 +11,7 @@ import {
 } from '../../Chats/modules/chats'
 import ChatRoom from '../components/ChatRoom';
 
+
 const mapStateToProps = state => ({
 messages: state.chats.messages || [],
 requiredMessages: state.chatroom.requiredMessages || []

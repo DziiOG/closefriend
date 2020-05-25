@@ -5,8 +5,6 @@ import { persistStore, persistReducer } from 'redux-persist'
 import makeRootReducer from './reducers';
 import { createLogger } from 'redux-logger';
 import AsyncStorage from '@react-native-community/async-storage';
-import { signinscreenReducer } from '../routes/SignIn/modules/signinscreen';
-import { signupscreenReducer } from '../routes/SignUp/modules/signupscreen';
 
 
 const log = createLogger({
@@ -17,8 +15,8 @@ const log = createLogger({
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ['home', 'signup', 'signin', 'profile', 'compose', 'chats', 'alarm', 'settings', 'splash',],
-    blacklist: ['chatroom']
+    whitelist: ['home', 'signup', 'signin', 'profile',  'chats',  'settings', 'splash',],
+    blacklist: ['chatroom', 'alarm', 'compose']
   }
 
   const persistedReducer = persistReducer(persistConfig, makeRootReducer())

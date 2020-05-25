@@ -77,7 +77,7 @@ export class SignUpScreen extends Component {
           .post('/signup', {
             email: this.state.email,
             password: this.state.password,
-            username: this.state.username
+            fullName: this.state.username
           })
           .then(results => {
            // console.log(results.data.token);

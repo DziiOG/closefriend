@@ -4,7 +4,8 @@ import constants from './actionConstants';
 const {
     SAVE_MESSAGES_TO_REDUX,
     REQUIRED_CHATROOM_MESSAGES,
-    SET_MESSAGES_TO_EMPTY
+    SET_MESSAGES_TO_EMPTY,
+    SEND_TO_FIRE
 } = constants;
 
 
@@ -21,7 +22,12 @@ export function setRequiredMessagesToEmptyArray(payload){
 
 
 
-
+export function sendToFire(payload){
+    return({
+        type: SEND_TO_FIRE,
+        payload
+    })
+}
 
 
 
@@ -30,7 +36,13 @@ export function setRequiredMessagesToEmptyArray(payload){
 
 //ACTION HANDLERS
 
-
+function handleSendToFire(state, action){
+    return update(state, {
+        chatroomid:{
+            $set: action.payload
+        }
+    })
+}
 
 
 
@@ -73,11 +85,13 @@ function handleSetRequiredMessagesToEmptyArray(state, action){
 
 const ACTION_HANDLERS = {
  REQUIRED_CHATROOM_MESSAGES: handlegetRequiredMessages,
- SET_MESSAGES_TO_EMPTY: handleSetRequiredMessagesToEmptyArray
+ SET_MESSAGES_TO_EMPTY: handleSetRequiredMessagesToEmptyArray,
+ SEND_TO_FIRE: handleSendToFire
 }
 
 const initialState = {
-   requiredMessages: []
+   requiredMessages: [],
+   chatroomid: ""
 };
 
 export function chatroomReducer (state = initialState, action){

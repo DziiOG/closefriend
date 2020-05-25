@@ -27,9 +27,22 @@ export default class Alarm extends Component {
         latitude: 0,
         longitude: 0,
         address: "",
+        tasks: []
         
     }
 
+
+    getTasks = () => {
+        axios.put("/user/tasks", {
+            userId: this.props.userId
+        }).then(response=>{
+            this.setState({
+                tasks: response.data
+            })
+        }).catch(error=>{
+            console.log(error)
+        })
+    }
 
 
     getLocation(){
@@ -60,7 +73,7 @@ export default class Alarm extends Component {
                 .catch(error => console.warn(error));
 
                
-                
+               
                 
             });
         }, (error) => {
@@ -74,7 +87,13 @@ export default class Alarm extends Component {
 
     componentDidMount(){
         
-        this.getLocation();
+       // this.getLocation();
+
+      // this.props.getTasksFromFireBase(this.props.userId)
+
+       console.log(this.props.userId)
+
+       this.getTasks();
         
 
     }
@@ -113,6 +132,9 @@ export default class Alarm extends Component {
      </Fragment> 
 
     }
+
+   
+
        
     render() {
         return (
@@ -164,18 +186,18 @@ export default class Alarm extends Component {
                     <Content style={{ flexDirection: 'row'}}>
 
                     {
-                        (this.props.userCreatedTasks.length == 0) ? (
-                        <View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
+                        (this.state.tasks.length == 0) ? (
+                        <View style={{justifyContent: 'center', alignItems: 'center',}}>
                             <ActivityIndicator size='large'></ActivityIndicator>
                         </View>) :
                             (
-                                this.props.userCreatedTasks.map((element, index)=> (
+                                this.state.tasks.map((element, index)=> (
 
                                 <TouchableOpacity key={index} style={{flexDirection: 'row', marginTop: (index > 0)? 15 : 0}}>
                                             
                                         <View style={{flexDirection: 'column', }}>
-                                            <Text style={{color: '#fff', fontSize: 14}}>9</Text>
-                                            <Text style={{color: '#ccc', fontSize: 11}} note>AM</Text>
+                                            <Text style={{color: '#fff', fontSize: 14}}>{new Date(element.time).getHours()}</Text>
+                                            <Text style={{color: '#ccc', fontSize: 11}} note>{new Date(element.time).getHours() >= 12? "PM": "AM"}</Text>
                                         </View>
                                         <View style={{paddingLeft: 60, flexDirection: 'column', borderBottomColor: '#fff', }}>
                                             <Text style={{color: '#fff', fontSize: 14}}>{element.title}</Text>

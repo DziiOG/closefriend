@@ -22,4 +22,8 @@ const styles = StyleSheet.create({
 });
 
 
-axios.defaults.baseURL = 'https://us-central1-halo-84fb8.cloudfunctions.net/api';
+//axios.defaults.baseURL = 'https://us-central1-halo-84fb8.cloudfunctions.net/api';
+
+
+axios.defaults.baseURL = 'https://us-central1-closefriend-1333a.cloudfunctions.net/api';
+

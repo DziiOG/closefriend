@@ -1,8 +1,10 @@
 import update from "react-addons-update";
 import constants from './actionConstants';
+import axios from "axios";
 
 const {
-    GET_USER_COMPOSED_DATA
+    GET_USER_COMPOSED_DATA,
+    SEND_COMPOSED_DATA_TO_FIRE
 } = constants;
 
 
@@ -16,9 +18,6 @@ export function getUserComposedData(payload){
             }
     )
 }
-
-
-
 
 
 

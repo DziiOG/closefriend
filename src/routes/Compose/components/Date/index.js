@@ -5,6 +5,7 @@ import { Text, Left, Right, Icon, Button } from 'native-base';
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import { TextInput } from 'react-native-paper';
 import { ProductConsumer } from '../../../../context';
+import axios from 'axios';
 
 
 const DateFromTime = ({getUserComposedData, composedData, navigation}) => {
@@ -125,10 +126,25 @@ const DateFromTime = ({getUserComposedData, composedData, navigation}) => {
 
                       }}
                       onPressOut={()=>{
-                        if(value.taskCompose && value.titleCompose){
 
-                        value.returnToDefault();
+                       
+
+
+
+                        if(value.taskCompose && value.titleCompose){
+                          axios.post('/user/tasks', {
+                          title: value.titleCompose,
+                          task: value.taskCompose,
+                          time: date,
+                          dateM: date,
+                          fullName: value.username
+                        }).then(res=>{
+                          console.log(res.data)
+                          value.returnToDefault();
                         navigation.navigate('Alarm');
+                        }).catch(err=>console.log(err))
+
+                        
                         }
                       }}
                        >
