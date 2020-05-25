@@ -7,7 +7,8 @@ import {
  getChatRoomIds,
  getChatMessages,
  getRequiredChatRoomMessages,
- getAllChatMessagesFromFirebase
+ getAllChatMessagesFromFirebase,
+ setProfileUser
 } from '../modules/chats';
 
 import {
@@ -31,7 +32,8 @@ const mapActionsCreators = {
   getChatMessages,
   getRequiredChatRoomMessages,
   getAllChatMessagesFromFirebase,
-  sendToFire
+  sendToFire,
+  setProfileUser
 };
 
 export default connect(mapStateToProps, mapActionsCreators)(Chats);

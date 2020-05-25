@@ -105,7 +105,7 @@ export default class Chats extends Component {
                                                                     this.setState({ clicked: Buttons[buttonIndex] },
                                                                         ()=> {
                                                                             if(this.state.clicked == "View Profile"){
-
+                                                                                this.props.setProfileUser(true)
 
                                                                                 this.props.navigation.navigate("Profile",{
                                                                                     email: item.email,

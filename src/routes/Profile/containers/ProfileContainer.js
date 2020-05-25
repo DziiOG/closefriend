@@ -8,7 +8,7 @@ import {
 import Profile from '../components/Profile';
 
 const mapStateToProps = state => ({
- 
+ showDifferentUser: state.chats.showDifferentUser
 });
 
 const mapActionsCreators = {

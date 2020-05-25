@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-
+import {setProfileUser} from '../routes/Chats/modules/chats'
 
 import {View, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -59,14 +59,14 @@ const Drawers = createDrawerNavigator();
 
 
 
-function MyDrawer({userToken, signUserOut, signout, username}) {
+function MyDrawer({userToken, signUserOut, signout, username, setProfileUser}) {
   return (
     <ProductConsumer >
       {
         (value)=>(
             (userToken.token) ?
           <NavigationContainer >
-            <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props} signUserOut={signUserOut} signout={signout} ></CustomDrawerContent>}>
+            <Drawers.Navigator  initialRouteName="Home"  drawerContent={(props)=> <CustomDrawerContent {...props} signUserOut={signUserOut} signout={signout} setProfileUser={setProfileUser} ></CustomDrawerContent>}>
               <Drawers.Screen name="Home"  component={HomeContainer} />
               <Drawers.Screen name="Alarm" component={AlarmContainer} />
               <Drawers.Screen name="Profile" component={ProfileContainer} />
@@ -190,7 +190,9 @@ function CustomDrawerContent(props) {
                                 </Icon>
                                 )} 
                                 label="Profile"
-                                onPress={()=> {props.navigation.navigate('Profile')}}
+                                onPress={()=> {
+                                  props.setProfileUser(false)
+                                  props.navigation.navigate('Profile')}}
                                 >
                         </DrawerItem>
                         <DrawerItem icon={({color, size}) => (
@@ -349,7 +351,8 @@ const mapStateToProps = state => ({
 });
 const mapActionsCreators = {
   signUserOut,
-  signout
+  signout,
+  setProfileUser
 };
 
 export default connect(

@@ -4,11 +4,22 @@ import axios from 'axios'
 import { ProductConsumer } from "../../../context";
 import { AppLoading } from "expo";
 
-const {GET_ALL_USERS, GET_CHATS_IDS, LOADING, SAVE_MESSAGES_TO_REDUX, REQUIRED_CHATROOM_MESSAGES, GET_ALL_CHAT_MESSAGES_FROM_FIRE} = constants;
+const {GET_ALL_USERS, GET_CHATS_IDS, LOADING, SAVE_MESSAGES_TO_REDUX, REQUIRED_CHATROOM_MESSAGES, GET_ALL_CHAT_MESSAGES_FROM_FIRE, SET_PROFILE_USER} = constants;
 
 
 
 //ACTIONS
+export function setProfileUser(payload){
+    return(
+        {
+            type: SET_PROFILE_USER,
+            payload
+        }
+    )
+}
+
+
+
 export function getAllChatMessagesFromFirebase(){
     
     return((dispatch)=>{
@@ -209,7 +220,13 @@ function handleGetRequiredChatRoomMessage(state, action){
 }
 
 
-
+function handleSetProfileUser(state, action){
+    return update(state, {
+        showDifferentUser: {
+            $set: action.payload
+        }
+    })
+}
 
 
 
@@ -240,7 +257,8 @@ const ACTION_HANDLERS = {
     LOADING: handleLoading,
     SAVE_MESSAGES_TO_REDUX: handlegetMessages,
     REQUIRED_CHATROOM_MESSAGES: handleGetRequiredChatRoomMessage,
-    GET_ALL_CHAT_MESSAGES_FROM_FIRE: handleGetAllChatMessagesFromFire
+    GET_ALL_CHAT_MESSAGES_FROM_FIRE: handleGetAllChatMessagesFromFire,
+    SET_PROFILE_USER: handleSetProfileUser
 }
 
 const initialState = {
@@ -249,7 +267,8 @@ const initialState = {
     loading: false,
     messages: [],
     requiredMessages: [],
-    allMessages: []
+    allMessages: [],
+    showDifferentUser: false
 };
 
 export function chatsReducer (state = initialState, action){
